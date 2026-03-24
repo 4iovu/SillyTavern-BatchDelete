@@ -1,0 +1,517 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Bulk Character Deleter — style.css  v1.2
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 菜单入口：完全用 ST 原生 .menu_button.menu_button_icon，不加任何样式 ── */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   主面板 Overlay（背景遮罩 + 居中容器）
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* dvh 自动排除手机浏览器地址栏，避免面板偏上 */
+    min-height: 100vh;
+    min-height: 100dvh;
+    /*
+     * 手机端上下 padding 说明：
+     *   56px ≈ ST 顶部工具栏高度，让面板不压在顶栏下方
+     *   底部同等，确保视觉上居中
+     *   左右 12px 不贴边
+     *
+     * 自己微调位置：
+     *   面板还是偏上 → 把第一个 56px 改小，如 40px
+     *   面板偏下    → 把 56px 改大，如 72px
+     */
+    padding: 56px 12px 56px;
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   主面板
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-panel {
+    background: var(--SmartThemeBlurTintColor);
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 10px;
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.5);
+    color: var(--SmartThemeBodyColor);
+    font-family: var(--mainFontFamily, inherit);
+
+    width: 520px;
+    max-width: 100%;
+    max-height: calc(100vh - 112px);
+    max-height: calc(100dvh - 112px);
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Header（无拖拽，普通标题栏）
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid var(--SmartThemeBorderColor);
+    flex-shrink: 0;
+    /* 无 cursor:grab，因为已移除拖拽功能 */
+}
+
+.bcd-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--SmartThemeEmColor);
+}
+
+.bcd-icon-btn {
+    background: none;
+    border: none;
+    color: var(--SmartThemeBodyColor);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 5px;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+}
+
+.bcd-icon-btn:hover {
+    background: rgba(255, 80, 80, 0.15);
+    color: var(--SmartThemeEmColor);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   标签页
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-tabs {
+    display: flex;
+    padding: 8px 14px 0;
+    flex-shrink: 0;
+}
+
+.bcd-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--SmartThemeBodyColor);
+    padding: 5px 14px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bcd-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--SmartThemeEmColor);
+}
+
+.bcd-tab.bcd-tab--active {
+    color: var(--SmartThemeEmColor);
+    border-bottom-color: var(--SmartThemeQuoteColor, #e87);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   工具栏（全选 + 搜索）
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--SmartThemeBorderColor);
+}
+
+.bcd-select-all-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--SmartThemeBodyColor);
+}
+
+.bcd-select-all-label input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: var(--SmartThemeQuoteColor, #e87);
+    width: 14px;
+    height: 14px;
+}
+
+.bcd-search {
+    flex: 1;
+    background: var(--SmartThemeBlurTintColor);
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 5px;
+    color: var(--SmartThemeBodyColor);
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    outline: none;
+    transition: border-color 0.12s;
+    min-width: 0;
+}
+
+.bcd-search:focus {
+    border-color: var(--SmartThemeQuoteColor, #e87);
+}
+
+.bcd-search::placeholder {
+    opacity: 0.45;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   进度条
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    flex-shrink: 0;
+}
+
+.bcd-prog-track {
+    flex: 1;
+    height: 5px;
+    background: var(--SmartThemeBorderColor);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bcd-prog-bar {
+    height: 100%;
+    background: var(--SmartThemeQuoteColor, #e87);
+    border-radius: 3px;
+    transition: width 0.18s ease;
+    width: 0%;
+}
+
+.bcd-prog-txt {
+    font-size: 0.78rem;
+    color: var(--SmartThemeBodyColor);
+    opacity: 0.6;
+    white-space: nowrap;
+    min-width: 44px;
+    text-align: right;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   列表
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 0;
+}
+
+.bcd-list::-webkit-scrollbar { width: 5px; }
+.bcd-list::-webkit-scrollbar-track { background: transparent; }
+.bcd-list::-webkit-scrollbar-thumb {
+    background: var(--SmartThemeBorderColor);
+    border-radius: 3px;
+}
+
+.bcd-row {
+    border-radius: 6px;
+    transition: background 0.1s;
+}
+
+.bcd-row:hover { background: rgba(255, 255, 255, 0.04); }
+
+.bcd-row.bcd-row--checked {
+    background: rgba(255, 255, 255, 0.07);
+    outline: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bcd-row-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 8px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.bcd-cb {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: var(--SmartThemeQuoteColor, #e87);
+}
+
+.bcd-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid var(--SmartThemeBorderColor);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.bcd-wb-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--SmartThemeBorderColor);
+    color: var(--SmartThemeBodyColor);
+}
+
+.bcd-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.bcd-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--SmartThemeEmColor);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bcd-tag {
+    font-size: 0.73rem;
+    color: var(--SmartThemeBodyColor);
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bcd-empty {
+    text-align: center;
+    padding: 36px 0;
+    color: var(--SmartThemeBodyColor);
+    opacity: 0.4;
+    font-size: 0.9rem;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Footer / 删除按钮
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 14px 10px;
+    border-top: 1px solid var(--SmartThemeBorderColor);
+    flex-shrink: 0;
+}
+
+.bcd-delete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 16px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    background: rgba(180, 40, 40, 0.18);
+    border: 1px solid rgba(180, 40, 40, 0.45);
+    color: #ff9090;
+}
+
+.bcd-delete-btn:hover:not(:disabled) {
+    background: rgba(180, 40, 40, 0.32);
+    border-color: rgba(200, 60, 60, 0.7);
+}
+
+.bcd-delete-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   确认弹窗 — 独立 overlay，z-index 高于主面板，确保居中
+   ────────────────────────────────────────────────────────────────────────── */
+.bcd-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9995;          /* 高于主面板的 9990 */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;    /* 垂直居中 */
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px 16px;     /* 上下留小边距，不需要像主面板那么大 */
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+}
+
+.bcd-confirm-box {
+    background: var(--SmartThemeBlurTintColor);
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 10px;
+    padding: 24px 22px 18px;
+    width: 380px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.bcd-confirm-icon {
+    text-align: center;
+    font-size: 2rem;
+    color: #f0a060;
+}
+
+.bcd-confirm-msg {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--SmartThemeBodyColor);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.bcd-confirm-wb-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--SmartThemeEmColor);
+    margin: 0 0 6px;
+}
+
+.bcd-confirm-wb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 130px;
+    overflow-y: auto;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 6px;
+}
+
+.bcd-wbcheck {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.85rem;
+    color: var(--SmartThemeBodyColor);
+    cursor: pointer;
+}
+
+.bcd-wbcheck input {
+    accent-color: var(--SmartThemeQuoteColor, #e87);
+    cursor: pointer;
+}
+
+.bcd-confirm-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.bcd-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--SmartThemeBorderColor);
+    color: var(--SmartThemeBodyColor);
+    transition: background 0.12s;
+}
+
+.bcd-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--SmartThemeEmColor);
+}
+
+.bcd-btn-danger-confirm {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: rgba(180, 40, 40, 0.22);
+    border: 1px solid rgba(180, 40, 40, 0.5);
+    color: #ff9090;
+    transition: background 0.12s;
+}
+
+.bcd-btn-danger-confirm:hover {
+    background: rgba(180, 40, 40, 0.38);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   移动端补充
+   ────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 560px) {
+    .bcd-panel {
+        width: 100%;
+    }
+
+    .bcd-confirm-box {
+        width: 100%;
+    }
+
+    .bcd-header {
+        padding: 12px 12px 10px;
+        min-height: 44px;
+    }
+
+    .bcd-row-label {
+        padding: 8px 6px;
+    }
+
+    .bcd-avatar,
+    .bcd-wb-icon {
+        width: 36px;
+        height: 36px;
+    }
+}
